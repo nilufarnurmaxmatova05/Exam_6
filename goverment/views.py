@@ -1,5 +1,6 @@
+import logging
+
 from django.contrib import messages
-from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth.views import LogoutView
@@ -9,15 +10,11 @@ from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
-from django.http import HttpResponseRedirect
-from django.urls import reverse
 
 from Exam_6 import settings
 from .forms import MinistryForm, MinisterForm, DepartmentForm, UserRegistrationForm, UserProfileForm
 from .models import Ministry, Minister, Department, UserProfile, PasswordResetCode
-import logging
 
-# Logger sozlamalari
 logger = logging.getLogger(__name__)
 
 
@@ -30,7 +27,6 @@ def index(request):
     })
 
 
-# Ministry views
 def ministry_list(request):
     query = request.GET.get('q', '')
     if query:
@@ -219,7 +215,6 @@ def minister_delete(request, pk):
     return render(request, 'government/minister_delete.html', {'minister': minister})
 
 
-# Department views
 def department_list(request):
     query = request.GET.get('q', '')
     if query:
@@ -374,13 +369,11 @@ def profile(request):
     })
 
 
-# Parol tiklash funksiyasi - kod yuborish
 def reset_password_request(request):
     if request.method == 'POST':
         email = request.POST.get('email')
 
         try:
-            # Emailni tekshirish
             try:
                 user = User.objects.get(email=email)
             except User.DoesNotExist:
@@ -388,14 +381,11 @@ def reset_password_request(request):
                 messages.error(request, "Bu email manzili bilan ro'yxatdan o'tgan foydalanuvchi topilmadi.")
                 return redirect('password_reset_request')
 
-            # 6 xonali kod yaratish
             reset_code = PasswordResetCode.generate_code(user)
             logger.info(f"Password reset code generated for user: {user.username}")
 
-            # Email yuborish
             subject = "O'zbekiston Respublikasi Hukumati - Parol tiklash kodi"
 
-            # HTML formatidagi xabar
             html_message = render_to_string('registration/password_reset_code_email.html', {
                 'user': user,
                 'code': reset_code.code,
@@ -403,10 +393,8 @@ def reset_password_request(request):
                 'expires_at': reset_code.expires_at.strftime('%H:%M'),
             })
 
-            # Oddiy matn formatidagi xabar
             plain_message = strip_tags(html_message)
 
-            # Emailni yuborish
             send_mail(
                 subject,
                 plain_message,
@@ -425,7 +413,6 @@ def reset_password_request(request):
     return render(request, 'registration/password_reset_request.html')
 
 
-# Parol tiklash kodi tasdiqlash va yangi parol o'rnatish
 def reset_password_verify(request):
     if request.method == 'POST':
         code = request.POST.get('code')
@@ -433,11 +420,9 @@ def reset_password_verify(request):
         password2 = request.POST.get('password2')
 
         try:
-            # Kodni tekshirish
             try:
                 reset_code = PasswordResetCode.objects.get(code=code, is_used=False)
 
-                # Kod amal qilish muddatini tekshirish
                 if not reset_code.is_valid():
                     logger.warning(f"Expired password reset code used: {code}")
                     messages.error(request, "Kod eskirgan. Iltimos, yangi kod so'rang.")
@@ -448,7 +433,6 @@ def reset_password_verify(request):
                 messages.error(request, "Noto'g'ri kod kiritildi.")
                 return redirect('password_reset_verify')
 
-            # Parollarni tekshirish
             if password1 != password2:
                 messages.error(request, "Parollar mos kelmadi.")
                 return render(request, 'registration/password_reset_verify.html', {'code': code})
@@ -457,13 +441,11 @@ def reset_password_verify(request):
                 messages.error(request, "Parol kamida 8 ta belgidan iborat bo'lishi kerak.")
                 return render(request, 'registration/password_reset_verify.html', {'code': code})
 
-            # Parolni yangilash
             with transaction.atomic():
                 user = reset_code.user
                 user.set_password(password1)
                 user.save()
 
-                # Kodni ishlatilgan deb belgilash
                 reset_code.is_used = True
                 reset_code.save()
 

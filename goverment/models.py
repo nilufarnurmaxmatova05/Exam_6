@@ -95,16 +95,12 @@ class PasswordResetCode(models.Model):
 
     @classmethod
     def generate_code(cls, user):
-        # Avvalgi ishlatilmagan kodlarni o'chirish
         cls.objects.filter(user=user, is_used=False).delete()
 
-        # 6 xonali raqamli kod yaratish
         code = ''.join(random.choices('0123456789', k=6))
 
-        # 30 daqiqa amal qiladigan kod yaratish
         expires_at = timezone.now() + timezone.timedelta(minutes=30)
 
-        # Yangi kod yaratish va saqlash
         reset_code = cls(user=user, code=code, expires_at=expires_at)
         reset_code.save()
 
