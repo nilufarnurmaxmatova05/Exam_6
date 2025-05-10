@@ -1,0 +1,50 @@
+{% extends 'government/base.html' %}
+
+{% block title %}Vazirliklar - O'zbekiston Respublikasi Hukumati{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h1>Vazirliklar</h1>
+    </div>
+    <div class="card-body">
+        <form method="get" action="{% url 'ministry_list' %}" class="mb-4">
+            <div style="display: flex; gap: 10px;">
+                <input type="text" name="q" value="{{ query }}" class="form-control" placeholder="Qidirish...">
+                <button type="submit" class="btn btn-primary">Qidirish</button>
+            </div>
+        </form>
+
+        {% if user.is_authenticated %}
+        <div class="mb-4">
+            <a href="{% url 'ministry_create' %}" class="btn btn-primary">Yangi vazirlik qo'shish</a>
+        </div>
+        {% endif %}
+
+        <div class="grid">
+            {% for ministry in ministries %}
+                <div class="card">
+                    <div class="card-header">
+                        <h5>{{ ministry.name }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>{{ ministry.description|truncatewords:30 }}</p>
+                        <p><strong>Tashkil etilgan sana:</strong> {{ ministry.established_date }}</p>
+                        {% if ministry.website %}
+                            <p><strong>Veb-sayt:</strong> <a href="{{ ministry.website }}" target="_blank">{{ ministry.website }}</a></p>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer">
+                        <a href="{% url 'ministry_detail' ministry.pk %}" class="btn btn-primary">Batafsil</a>
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'ministry_update' ministry.pk %}" class="btn btn-secondary">Tahrirlash</a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% empty %}
+                <p>Vazirliklar mavjud emas.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

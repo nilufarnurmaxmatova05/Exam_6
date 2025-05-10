@@ -1,0 +1,72 @@
+{% extends 'government/base.html' %}
+
+{% block title %}{{ ministry.name }} - O'zbekiston Respublikasi Hukumati{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h1>{{ ministry.name }}</h1>
+    </div>
+    <div class="card-body">
+        <h3>Tavsif</h3>
+        <p>{{ ministry.description }}</p>
+
+        <p><strong>Tashkil etilgan sana:</strong> {{ ministry.established_date }}</p>
+
+        {% if ministry.website %}
+            <p><strong>Rasmiy veb-sayt:</strong> <a href="{{ ministry.website }}" target="_blank">{{ ministry.website }}</a></p>
+        {% endif %}
+
+        <h3>Vazirlar</h3>
+        {% if ministers %}
+            <div class="row">
+                {% for minister in ministers %}
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            {% if minister.photo %}
+                                <img src="{{ minister.photo.url }}" class="card-img-top" alt="{{ minister.first_name }} {{ minister.last_name }}">
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title">{{ minister.last_name }} {{ minister.first_name }}</h5>
+                                <p class="card-text"><strong>Lavozim:</strong> {{ minister.position }}</p>
+                                <a href="{% url 'minister_detail' minister.pk %}" class="btn btn-primary">Batafsil</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>Vazirlar mavjud emas.</p>
+        {% endif %}
+
+        <h3>Bo'limlar</h3>
+        {% if departments %}
+            <div class="row">
+                {% for department in departments %}
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ department.name }}</h5>
+                                <p class="card-text">{{ department.description|truncatewords:15 }}</p>
+                                {% if department.head %}
+                                    <p><strong>Bo'lim boshlig'i:</strong> {{ department.head }}</p>
+                                {% endif %}
+                                <a href="{% url 'department_detail' department.pk %}" class="btn btn-primary">Batafsil</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>Bo'limlar mavjud emas.</p>
+        {% endif %}
+    </div>
+    <div class="card-footer">
+        <a href="{% url 'ministry_list' %}" class="btn btn-secondary">Orqaga</a>
+        {% if user.is_authenticated %}
+            <a href="{% url 'ministry_update' ministry.pk %}" class="btn btn-primary">Tahrirlash</a>
+            <a href="{% url 'ministry_delete' ministry.pk %}" class="btn btn-danger">O'chirish</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

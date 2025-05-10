@@ -1,0 +1,129 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}O'zbekiston Respublikasi Hukumati{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <header class="navbar">
+        <div class="container navbar-container">
+            <a href="{% url 'index' %}" class="navbar-brand">
+                O'zbekiston Respublikasi Hukumati
+            </a>
+            <button class="navbar-toggle" id="navbarToggle">
+                <span>&#9776;</span>
+            </button>
+            <ul class="navbar-nav" id="navbarNav">
+                <li class="nav-item">
+                    <a href="{% url 'index' %}" class="nav-link {% if request.path == '/' %}active{% endif %}">Bosh sahifa</a>
+                </li>
+               <li class="nav-item">
+                    <a href="{% url 'ministry_list' %}" class="nav-link {% if 'ministries' in request.path %}active{% endif %}">Vazirliklar</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'minister_list' %}" class="nav-link {% if 'ministers' in request.path %}active{% endif %}">Vazirlar</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'department_list' %}" class="nav-link {% if 'departments' in request.path %}active{% endif %}">Bo'limlar</a>
+                </li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a href="{% url 'profile' %}" class="nav-link {% if 'profile' in request.path %}active{% endif %}">Profil</a>
+                    </li>
+                    <li class="nav-item">
+                        <form id="logout-form" method="post" action="{% url 'logout' %}" style="display: none;">
+                            {% csrf_token %}
+                        </form>
+                        <a href="#" class="nav-link" onclick="document.getElementById('logout-form').submit(); return false;">Chiqish</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a href="{% url 'login' %}" class="nav-link {% if 'login' in request.path %}active{% endif %}">Kirish</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'register' %}" class="nav-link {% if 'register' in request.path %}active{% endif %}">Ro'yxatdan o'tish</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>O'zbekiston Respublikasi Hukumati</h3>
+                    <p>Vazirlar Mahkamasi haqida ma'lumotlar portali</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Foydali havolalar</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://www.gov.uz" target="_blank">O'zbekiston Respublikasi hukumat portali</a></li>
+                        <li><a href="https://president.uz" target="_blank">O'zbekiston Respublikasi Prezidenti</a></li>
+                        <li><a href="https://parliament.gov.uz" target="_blank">O'zbekiston Respublikasi Oliy Majlisi</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Bog'lanish</h3>
+                    <p>Manzil: Toshkent sh., Mustaqillik maydoni, 5</p>
+                    <p>Telefon: +998 71 239-86-94</p>
+                    <p>Email: info@gov.uz</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; {% now "Y" %} O'zbekiston Respublikasi Hukumati. Barcha huquqlar himoyalangan.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/main.js' %}"></script>
+    <script>
+        document.getElementById('navbarToggle').addEventListener('click', function() {
+            document.getElementById('navbarNav').classList.toggle('show');
+        });
+        function logout() {
+        // CSRF tokenni olish
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        // Chiqish so'rovini yuborish
+        fetch('{% url "logout" %}', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                // Muvaffaqiyatli chiqish
+                window.location.href = '{% url "login" %}';  // Yoki 'home' kabi boshqa sahifaga yo'naltirish
+            } else {
+                console.error('Chiqishda xatolik yuz berdi');
+            }
+        })
+        .catch(error => {
+            console.error('Chiqishda xatolik yuz berdi:', error);
+        });
+    }
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

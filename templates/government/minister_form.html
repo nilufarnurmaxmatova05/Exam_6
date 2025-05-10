@@ -1,0 +1,144 @@
+{% extends 'government/base.html' %}
+
+{% block title %}Vazir {{ action }} - O'zbekiston Respublikasi Hukumati{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h1>Vazir {{ action }}</h1>
+    </div>
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}</label>
+                {{ form.first_name }}
+                {% if form.first_name.errors %}
+                    <div class="alert alert-danger">
+                        {{ form.first_name.errors }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.last_name.id_for_label }}">{{ form.last_name.label }}</label>
+                {{ form.last_name }}
+                {% if form.last_name.errors %}
+                    <div class="alert alert-danger">
+                        {{ form.last_name.errors }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.middle_name.id_for_label }}">{{ form.middle_name.label }}</label>
+                {{ form.middle_name }}
+                {% if form.middle_name.errors %}
+                    <div class="alert alert-danger">
+                        {{ form.middle_name.errors }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.gender.id_for_label }}">{{ form.gender.label }}</label>
+                {{ form.gender }}
+                {% if form.gender.errors %}
+                    <div class="alert alert-danger">
+                        {{ form.gender.errors }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.photo.id_for_label }}">{{ form.photo.label }}</label>
+                {{ form.photo }}
+                {% if form.photo.errors %}
+                    <div class="alert alert-danger">
+                        {{ form.photo.errors }}
+                    </div>
+                {% endif %}
+                {% if form.instance.photo %}
+                    <p>Joriy rasm: <img src="{{ form.instance.photo.url }}" alt="Joriy rasm" style="max-height: 100px;"></p>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.birth_date.id_for_label }}">{{ form.birth_date.label }}</label>
+                {{ form.birth_date }}
+                {% if form.birth_date.errors %}
+                    <div class="alert alert-danger">
+                        {{ form.birth_date.errors }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.biography.id_for_label }}">{{ form.biography.label }}</label>
+                {{ form.biography }}
+                {% if form.biography.errors %}
+                    <div class="alert alert-danger">
+                        {{ form.biography.errors }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.ministry.id_for_label }}">{{ form.ministry.label }}</label>
+                {{ form.ministry }}
+                {% if form.ministry.errors %}
+                    <div class="alert alert-danger">
+                        {{ form.ministry.errors }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.position.id_for_label }}">{{ form.position.label }}</label>
+                {{ form.position }}
+                {% if form.position.errors %}
+                    <div class="alert alert-danger">
+                        {{ form.position.errors }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.appointment_date.id_for_label }}">{{ form.appointment_date.label }}</label>
+                {{ form.appointment_date }}
+                {% if form.appointment_date.errors %}
+                    <div class="alert alert-danger">
+                        {{ form.appointment_date.errors }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+                {{ form.email }}
+                {% if form.email.errors %}
+                    <div class="alert alert-danger">
+                        {{ form.email.errors }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.phone.id_for_label }}">{{ form.phone.label }}</label>
+                {{ form.phone }}
+                {% if form.phone.errors %}
+                    <div class="alert alert-danger">
+                        {{ form.phone.errors }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Saqlash</button>
+                <a href="{% url 'minister_list' %}" class="btn btn-secondary">Bekor qilish</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

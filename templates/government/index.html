@@ -1,0 +1,57 @@
+{% extends 'government/base.html' %}
+
+{% block title %}Bosh sahifa - O'zbekiston Respublikasi Hukumati{% endblock %}
+
+{% block content %}
+<div style="background-color: #f8f9fa; padding: 30px; border-radius: 5px; margin-bottom: 30px;">
+    <h1 style="font-size: 2.5rem; margin-bottom: 15px;">O'zbekiston Respublikasi Hukumati</h1>
+    <p style="font-size: 1.2rem; margin-bottom: 20px;">Vazirlar Mahkamasi tarkibi va faoliyati haqida ma'lumot</p>
+    <hr style="margin: 20px 0;">
+    <p>Ushbu saytda O'zbekiston Respublikasi Vazirlar Mahkamasi tarkibi, vazirliklari va vazirlari haqida ma'lumotlar keltirilgan.</p>
+    <a href="{% url 'ministry_list' %}" class="btn btn-primary" style="margin-top: 10px;">Vazirliklarni ko'rish</a>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 30px;">
+    <div style="flex: 1; min-width: 300px;">
+        <h2>So'nggi vazirliklar</h2>
+        <ul class="list-group">
+            {% for ministry in ministries %}
+                <li class="list-group-item">
+                    <div>
+                        <h5 style="margin-bottom: 5px;">{{ ministry.name }}</h5>
+                        <small>{{ ministry.established_date }}</small>
+                    </div>
+                    <p>{{ ministry.description|truncatewords:20 }}</p>
+                    <a href="{% url 'ministry_detail' ministry.pk %}" class="btn btn-primary" style="font-size: 0.9rem;">Batafsil</a>
+                </li>
+            {% empty %}
+                <li class="list-group-item">Vazirliklar mavjud emas</li>
+            {% endfor %}
+        </ul>
+        <div style="margin-top: 15px;">
+            <a href="{% url 'ministry_list' %}" class="btn btn-secondary">Barcha vazirliklarni ko'rish</a>
+        </div>
+    </div>
+    
+    <div style="flex: 1; min-width: 300px;">
+        <h2>So'nggi vazirlar</h2>
+        <ul class="list-group">
+            {% for minister in ministers %}
+                <li class="list-group-item">
+                    <div>
+                        <h5 style="margin-bottom: 5px;">{{ minister.last_name }} {{ minister.first_name }}</h5>
+                        <small>{{ minister.appointment_date }}</small>
+                    </div>
+                    <p>{{ minister.position }} - {{ minister.ministry.name }}</p>
+                    <a href="{% url 'minister_detail' minister.pk %}" class="btn btn-primary" style="font-size: 0.9rem;">Batafsil</a>
+                </li>
+            {% empty %}
+                <li class="list-group-item">Vazirlar mavjud emas</li>
+            {% endfor %}
+        </ul>
+        <div style="margin-top: 15px;">
+            <a href="{% url 'minister_list' %}" class="btn btn-secondary">Barcha vazirlarni ko'rish</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

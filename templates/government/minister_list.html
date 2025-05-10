@@ -1,0 +1,51 @@
+{% extends 'government/base.html' %}
+
+{% block title %}Vazirlar - O'zbekiston Respublikasi Hukumati{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h1>Vazirlar</h1>
+    </div>
+    <div class="card-body">
+        <form method="get" action="{% url 'minister_list' %}" class="mb-4">
+            <div style="display: flex; gap: 10px;">
+                <input type="text" name="q" value="{{ query }}" class="form-control" placeholder="Qidirish...">
+                <button type="submit" class="btn btn-primary">Qidirish</button>
+            </div>
+        </form>
+
+        {% if user.is_authenticated %}
+        <div class="mb-4">
+            <a href="{% url 'minister_create' %}" class="btn btn-primary">Yangi vazir qo'shish</a>
+        </div>
+        {% endif %}
+
+        <div class="grid">
+            {% for minister in ministers %}
+                <div class="card">
+                    <div class="card-header">
+                        <h5>{{ minister.last_name }} {{ minister.first_name }}</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if minister.photo %}
+                            <img src="{{ minister.photo.url }}" alt="{{ minister.last_name }} {{ minister.first_name }}" class="img-fluid mb-3" style="max-height: 150px;">
+                        {% endif %}
+                        <p><strong>Lavozim:</strong> {{ minister.position }}</p>
+                        <p><strong>Vazirlik:</strong> {{ minister.ministry.name }}</p>
+                        <p><strong>Tayinlangan sana:</strong> {{ minister.appointment_date }}</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="{% url 'minister_detail' minister.pk %}" class="btn btn-primary">Batafsil</a>
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'minister_update' minister.pk %}" class="btn btn-secondary">Tahrirlash</a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% empty %}
+                <p>Vazirlar mavjud emas.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

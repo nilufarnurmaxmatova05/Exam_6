@@ -1,0 +1,19 @@
+{% extends 'government/base.html' %}
+
+{% block title %}Vazirni o'chirish - O'zbekiston Respublikasi Hukumati{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h1>Vazirni o'chirish</h1>
+    </div>
+    <div class="card-body">
+        <p>Siz rostdan ham "{{ minister.last_name }} {{ minister.first_name }}" vazirini o'chirmoqchimisiz?</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Ha, o'chirish</button>
+            <a href="{% url 'minister_detail' minister.pk %}" class="btn btn-secondary">Yo'q, bekor qilish</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

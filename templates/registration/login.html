@@ -1,0 +1,119 @@
+{% extends 'government/base.html' %}
+{% load static %}
+
+{% block title %}Tizimga kirish - O'zbekiston Respublikasi Hukumati{% endblock %}
+
+{% block extra_css %}
+<style>
+    .auth-container {
+        max-width: 450px;
+        margin: 2rem auto;
+    }
+
+    .auth-card {
+        background-color: var(--white);
+        border-radius: var(--border-radius);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .auth-header {
+        background-color: var(--primary-color);
+        color: var(--white);
+        padding: 2rem;
+        text-align: center;
+    }
+
+    .auth-header h1 {
+        margin: 0;
+        color: var(--white);
+        font-size: 1.75rem;
+    }
+
+    .auth-body {
+        padding: 2rem;
+    }
+
+    .auth-footer {
+        background-color: var(--gray-100);
+        padding: 1.5rem;
+        text-align: center;
+        border-top: 1px solid var(--gray-200);
+    }
+
+    .auth-links {
+        margin-top: 1rem;
+    }
+
+    .auth-links a {
+        display: inline-block;
+        margin: 0 0.5rem;
+        color: var(--primary-color);
+        text-decoration: none;
+        transition: var(--transition);
+    }
+
+    .auth-links a:hover {
+        color: var(--primary-dark);
+        text-decoration: underline;
+    }
+
+    .form-control {
+        margin-bottom: 1.5rem;
+    }
+
+    .btn-auth {
+        width: 100%;
+        padding: 0.75rem;
+        font-size: 1rem;
+        font-weight: 500;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <h1>Tizimga kirish</h1>
+        </div>
+        <div class="auth-body">
+            <form method="post">
+                {% csrf_token %}
+
+                {% if form.errors %}
+                <div class="alert alert-danger">
+                    <p>Foydalanuvchi nomi yoki parol noto'g'ri. Iltimos, qayta urinib ko'ring.</p>
+                </div>
+                {% endif %}
+
+                <div class="form-group">
+                    <label for="{{ form.username.id_for_label }}" class="form-label">Foydalanuvchi nomi</label>
+                    {{ form.username.errors }}
+                    <input type="text" name="{{ form.username.html_name }}" id="{{ form.username.id_for_label }}" class="form-control" placeholder="Foydalanuvchi nomingizni kiriting" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.password.id_for_label }}" class="form-label">Parol</label>
+                    {{ form.password.errors }}
+                    <input type="password" name="{{ form.password.html_name }}" id="{{ form.password.id_for_label }}" class="form-control" placeholder="Parolingizni kiriting" required>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-auth">Kirish</button>
+                </div>
+            </form>
+        </div>
+        <div class="auth-footer">
+            <p>Hisobingiz yo'qmi?</p>
+            <div class="auth-links">
+                <a href="{% url 'register' %}">Ro'yxatdan o'tish</a>
+                <!-- Parol tiklash havolasini yangilash -->
+                <div class="form-group">
+                    <a href="{% url 'password_reset_request' %}" class="text-primary">Parolni unutdingizmi?</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

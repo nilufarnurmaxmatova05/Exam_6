@@ -1,0 +1,309 @@
+{% extends 'government/base.html' %}
+{% load static %}
+
+{% block title %}Profil - O'zbekiston Respublikasi Hukumati{% endblock %}
+
+{% block extra_css %}
+<style>
+    .profile-container {
+        max-width: 900px;
+        margin: 2rem auto;
+    }
+
+    .profile-header {
+        background-color: var(--primary-color);
+        color: var(--white);
+        padding: 2rem;
+        border-radius: var(--border-radius) var(--border-radius) 0 0;
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+    }
+
+    .profile-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid var(--white);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        background-color: var(--white);
+    }
+
+    .profile-info h1 {
+        margin: 0 0 0.5rem 0;
+        color: var(--white);
+    }
+
+    .profile-info p {
+        margin: 0;
+        opacity: 0.9;
+    }
+
+    .profile-tabs {
+        display: flex;
+        background-color: var(--white);
+        border-bottom: 1px solid var(--gray-200);
+    }
+
+    .profile-tab {
+        padding: 1rem 1.5rem;
+        cursor: pointer;
+        font-weight: 500;
+        color: var(--gray-700);
+        border-bottom: 2px solid transparent;
+        transition: var(--transition);
+    }
+
+    .profile-tab:hover {
+        color: var(--primary-color);
+    }
+
+    .profile-tab.active {
+        color: var(--primary-color);
+        border-bottom-color: var(--primary-color);
+    }
+
+    .profile-content {
+        background-color: var(--white);
+        padding: 2rem;
+        border-radius: 0 0 var(--border-radius) var(--border-radius);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .profile-section {
+        display: none;
+    }
+
+    .profile-section.active {
+        display: block;
+    }
+
+    .profile-section h2 {
+        margin-top: 0;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid var(--gray-200);
+        color: var(--primary-color);
+    }
+
+    .form-row {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .form-col {
+        flex: 1;
+    }
+
+    .profile-stats {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        flex: 1;
+        min-width: 200px;
+        background-color: var(--gray-100);
+        padding: 1.5rem;
+        border-radius: var(--border-radius);
+        text-align: center;
+        transition: var(--transition);
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        color: var(--gray-700);
+        font-weight: 500;
+    }
+
+    @media (max-width: 768px) {
+        .profile-header {
+            flex-direction: column;
+            text-align: center;
+            padding: 1.5rem;
+        }
+
+        .profile-tabs {
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .form-row {
+            flex-direction: column;
+            gap: 0;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="profile-header">
+        <div class="profile-info">
+            <h1>{{ user.get_full_name|default:user.username }}</h1>
+            <p>{{ user.email }}</p>
+            <p>Ro'yxatdan o'tgan sana: {{ user.date_joined|date:"d.m.Y" }}</p>
+        </div>
+    </div>
+
+    <div class="profile-tabs">
+        <div class="profile-tab active" data-tab="personal">Shaxsiy ma'lumotlar</div>
+        <div class="profile-tab" data-tab="security">Xavfsizlik</div>
+        <div class="profile-tab" data-tab="activity">Faoliyat</div>
+    </div>
+
+    <div class="profile-content">
+        <!-- Shaxsiy ma'lumotlar -->
+        <div class="profile-section active" id="personal">
+            <h2>Shaxsiy ma'lumotlar</h2>
+
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="form_type" value="personal">
+
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="{{ user_form.first_name.id_for_label }}" class="form-label">Ism</label>
+                            {{ user_form.first_name.errors }}
+                            <input type="text" name="{{ user_form.first_name.html_name }}" id="{{ user_form.first_name.id_for_label }}" class="form-control" value="{{ user_form.first_name.value|default:'' }}" placeholder="Ismingizni kiriting">
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="{{ user_form.last_name.id_for_label }}" class="form-label">Familiya</label>
+                            {{ user_form.last_name.errors }}
+                            <input type="text" name="{{ user_form.last_name.html_name }}" id="{{ user_form.last_name.id_for_label }}" class="form-control" value="{{ user_form.last_name.value|default:'' }}" placeholder="Familiyangizni kiriting">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ user_form.email.id_for_label }}" class="form-label">Email</label>
+                    {{ user_form.email.errors }}
+                    <input type="email" name="{{ user_form.email.html_name }}" id="{{ user_form.email.id_for_label }}" class="form-control" value="{{ user_form.email.value|default:'' }}" placeholder="Email manzilingizni kiriting">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="{{ profile_form.phone.id_for_label }}" class="form-label">Telefon raqami</label>
+                            {{ profile_form.phone.errors }}
+                            <input type="tel" name="{{ profile_form.phone.html_name }}" id="{{ profile_form.phone.id_for_label }}" class="form-control" value="{{ profile_form.phone.value|default:'' }}" placeholder="+998 XX XXX XX XX">
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="{{ profile_form.address.id_for_label }}" class="form-label">Manzil</label>
+                            {{ profile_form.address.errors }}
+                            <input type="text" name="{{ profile_form.address.html_name }}" id="{{ profile_form.address.id_for_label }}" class="form-control" value="{{ profile_form.address.value|default:'' }}" placeholder="Manzilingizni kiriting">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ profile_form.photo.id_for_label }}" class="form-label">Profil rasmi</label>
+                    {{ profile_form.photo.errors }}
+                    <input type="file" name="{{ profile_form.photo.html_name }}" id="{{ profile_form.photo.id_for_label }}" class="form-control" accept="image/*">
+                    <div class="form-help-text">Maksimal hajm: 5MB. Ruxsat etilgan formatlar: JPG, PNG, GIF</div>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Saqlash</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Xavfsizlik -->
+        <div class="profile-section" id="security">
+            <h2>Xavfsizlik</h2>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h3 class="card-title">Parolni o'zgartirish</h3>
+                    <p>Parolingizni muntazam o'zgartirib turish tavsiya etiladi.</p>
+                    <a href="{% url 'password_reset_request' %}" class="btn btn-primary">Parolni o'zgartirish</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">Kirish tarixi</h3>
+                    <p><strong>Oxirgi kirish:</strong> {{ user.last_login|date:"d.m.Y H:i" }}</p>
+                    <p><strong>IP manzil:</strong> {{ request.META.REMOTE_ADDR }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Faoliyat -->
+        <div class="profile-section" id="activity">
+            <h2>Faoliyat</h2>
+
+            <div class="profile-stats">
+                <div class="stat-card">
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">Qo'shilgan vazirlar</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">Qo'shilgan vazirliklar</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">Qo'shilgan bo'limlar</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">So'nggi faoliyat</h3>
+                    <p>Hozircha faoliyat mavjud emas.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Profil tablarini boshqarish
+        const tabs = document.querySelectorAll('.profile-tab');
+        const sections = document.querySelectorAll('.profile-section');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                const tabId = this.getAttribute('data-tab');
+
+                // Barcha tablardan active klassini olib tashlash
+                tabs.forEach(t => t.classList.remove('active'));
+
+                // Barcha seksiyalardan active klassini olib tashlash
+                sections.forEach(s => s.classList.remove('active'));
+
+                // Tanlangan tabga active klassini qo'shish
+                this.classList.add('active');
+
+                // Tanlangan seksiyaga active klassini qo'shish
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+    });
+</script>
+{% endblock %}

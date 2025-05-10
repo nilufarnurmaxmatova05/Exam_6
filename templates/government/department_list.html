@@ -1,0 +1,50 @@
+{% extends 'government/base.html' %}
+
+{% block title %}Bo'limlar - O'zbekiston Respublikasi Hukumati{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h1>Bo'limlar</h1>
+    </div>
+    <div class="card-body">
+        <form method="get" action="{% url 'department_list' %}" class="mb-4">
+            <div style="display: flex; gap: 10px;">
+                <input type="text" name="q" value="{{ query }}" class="form-control" placeholder="Qidirish...">
+                <button type="submit" class="btn btn-primary">Qidirish</button>
+            </div>
+        </form>
+        
+        {% if user.is_authenticated %}
+        <div class="mb-4">
+            <a href="{% url 'department_create' %}" class="btn btn-primary">Yangi bo'lim qo'shish</a>
+        </div>
+        {% endif %}
+        
+        <div class="grid">
+            {% for department in departments %}
+                <div class="card">
+                    <div class="card-header">
+                        <h5>{{ department.name }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Vazirlik:</strong> {{ department.ministry.name }}</p>
+                        <p>{{ department.description|truncatewords:30 }}</p>
+                        {% if department.head %}
+                            <p><strong>Bo'lim boshlig'i:</strong> {{ department.head }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer">
+                        <a href="{% url 'department_detail' department.pk %}" class="btn btn-primary">Batafsil</a>
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'department_update' department.pk %}" class="btn btn-secondary">Tahrirlash</a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% empty %}
+                <p>Bo'limlar mavjud emas.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends 'government/base.html' %}
+
+{% block title %}Bo'lim {{ action }} - O'zbekiston Respublikasi Hukumati{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h1>Bo'lim {{ action }}</h1>
+    </div>
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+                {{ form.name }}
+                {% if form.name.errors %}
+                    <div class="alert alert-danger">
+                        {{ form.name.errors }}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.ministry.id_for_label }}">{{ form.ministry.label }}</label>
+                {{ form.ministry }}
+                {% if form.ministry.errors %}
+                    <div class="alert alert-danger">
+                        {{ form.ministry.errors }}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
+                {{ form.description }}
+                {% if form.description.errors %}
+                    <div class="alert alert-danger">
+                        {{ form.description.errors }}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.head.id_for_label }}">{{ form.head.label }}</label>
+                {{ form.head }}
+                {% if form.head.errors %}
+                    <div class="alert alert-danger">
+                        {{ form.head.errors }}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Saqlash</button>
+                <a href="{% url 'department_list' %}" class="btn btn-secondary">Bekor qilish</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

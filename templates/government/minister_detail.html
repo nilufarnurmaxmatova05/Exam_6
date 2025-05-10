@@ -1,0 +1,54 @@
+{% extends 'government/base.html' %}
+
+{% block title %}{{ minister.last_name }} {{ minister.first_name }} - O'zbekiston Respublikasi Hukumati{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h1>{{ minister.last_name }} {{ minister.first_name }}
+        {% if minister.middle_name %} {{ minister.middle_name }}{% endif %}</h1>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4">
+                {% if minister.photo %}
+                    <img src="{{ minister.photo.url }}" alt="{{ minister.last_name }} {{ minister.first_name }}" class="img-fluid mb-3">
+                {% endif %}
+            </div>
+            <div class="col-md-8">
+                <p><strong>Lavozim:</strong> {{ minister.position }}</p>
+                <p><strong>Vazirlik:</strong> <a href="{% url 'ministry_detail' minister.ministry.pk %}">{{ minister.ministry.name }}</a></p>
+                <p><strong>Jinsi:</strong> {{ minister.get_gender_display }}</p>
+
+                {% if minister.biography %}
+                    <h3>Biografiya</h3>
+                    <p>{{ minister.biography }}</p>
+                {% endif %}
+
+                {% if minister.birth_date %}
+                    <p><strong>Tug'ilgan sana:</strong> {{ minister.birth_date }}</p>
+                {% endif %}
+
+                {% if minister.appointment_date %}
+                    <p><strong>Tayinlangan sana:</strong> {{ minister.appointment_date }}</p>
+                {% endif %}
+
+                {% if minister.email %}
+                    <p><strong>Email:</strong> {{ minister.email }}</p>
+                {% endif %}
+
+                {% if minister.phone %}
+                    <p><strong>Telefon:</strong> {{ minister.phone }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <a href="{% url 'minister_list' %}" class="btn btn-secondary">Orqaga</a>
+        {% if user.is_authenticated %}
+            <a href="{% url 'minister_update' minister.pk %}" class="btn btn-primary">Tahrirlash</a>
+            <a href="{% url 'minister_delete' minister.pk %}" class="btn btn-danger">O'chirish</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

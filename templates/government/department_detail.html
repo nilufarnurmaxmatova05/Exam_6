@@ -1,0 +1,27 @@
+{% extends 'government/base.html' %}
+
+{% block title %}{{ department.name }} - O'zbekiston Respublikasi Hukumati{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h1>{{ department.name }}</h1>
+    </div>
+    <div class="card-body">
+        <p><strong>Vazirlik:</strong> <a href="{% url 'ministry_detail' department.ministry.pk %}">{{ department.ministry.name }}</a></p>
+        {% if department.head %}
+            <p><strong>Bo'lim boshlig'i:</strong> {{ department.head }}</p>
+        {% endif %}
+        
+        <h3>Tavsif</h3>
+        <p>{{ department.description }}</p>
+    </div>
+    <div class="card-footer">
+        <a href="{% url 'department_list' %}" class="btn btn-secondary">Orqaga</a>
+        {% if user.is_authenticated %}
+            <a href="{% url 'department_update' department.pk %}" class="btn btn-primary">Tahrirlash</a>
+            <a href="{% url 'department_delete' department.pk %}" class="btn btn-danger">O'chirish</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

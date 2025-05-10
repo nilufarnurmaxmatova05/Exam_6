@@ -1,0 +1,20 @@
+{% extends 'government/base.html' %}
+
+{% block title %}Vazirlikni o'chirish - O'zbekiston Respublikasi Hukumati{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h1>Vazirlikni o'chirish</h1>
+    </div>
+    <div class="card-body">
+        <p>Siz rostdan ham "{{ ministry.name }}" vazirligini o'chirmoqchimisiz?</p>
+        <p class="text-danger">Diqqat: Bu vazirlikka tegishli barcha vazirlar va bo'limlar ham o'chirilishi mumkin!</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Ha, o'chirish</button>
+            <a href="{% url 'ministry_detail' ministry.pk %}" class="btn btn-secondary">Yo'q, bekor qilish</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
