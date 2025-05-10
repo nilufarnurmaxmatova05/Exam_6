@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -122,27 +123,23 @@ USE_TZ = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Static files (CSS, JavaScript, Images)
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
-# Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# Login/Logout URLs
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'index'
 LOGOUT_REDIRECT_URL = 'index'
 
-# SMTP sozlamalari
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'  # Gmail SMTP serveri
-EMAIL_PORT = 587  # TLS porti
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'hhabibullayev075@gmail.com'  # O'z email manzilingizni kiriting
-EMAIL_HOST_PASSWORD = 'snan gtqu qbnb uyti'  # Gmail app password (2FA yoqilgan bo'lsa)
+EMAIL_HOST_USER = 'hhabibullayev075@gmail.com'
+EMAIL_HOST_PASSWORD = 'snan gtqu qbnb uyti'
 DEFAULT_FROM_EMAIL = 'O\'zbekiston Respublikasi Hukumati <your_email@gmail.com>'
